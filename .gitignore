@@ -1,0 +1,22 @@
+# 微信开发者工具生成的文件
+.project
+*.sublime-project
+*.sublime-workspace
+.idea
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# 日志文件
+*.log
+logs/
+
+# node_modules（如果有）
+node_modules/
+
+# 临时文件
+*.tmp
+*.temp

@@ -1,0 +1,26 @@
+<view class="page">
+  <view class="section">
+    <view class="section-title">收货地址</view>
+    <view>{{address.name}} {{address.phone}}</view>
+    <view>{{address.detail}}</view>
+  </view>
+
+  <view class="section">
+    <view class="section-title">商品清单</view>
+    <block wx:for="{{items}}" wx:key="id">
+      <view class="item">
+        <image class="cover" src="{{item.cover}}" mode="aspectFill" />
+        <view class="info">
+          <view class="name">{{item.name}}</view>
+          <view class="meta">¥{{item.price}} × {{item.count}}</view>
+        </view>
+        <view class="amount">¥{{item.amount}}</view>
+      </view>
+    </block>
+  </view>
+
+  <view class="bottom-bar">
+    <view>共 {{totalCount}} 件，合计：<text class="price">¥{{totalPrice}}</text></view>
+    <button class="submit" bindtap="submitOrder">提交订单</button>
+  </view>
+</view>
