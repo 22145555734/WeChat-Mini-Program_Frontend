@@ -1,16 +1,18 @@
 // miniprogram/pages/checkout/checkout.js
-const { getCart, setCart, createOrder } = require("../../utils/storage.js");
+const {
+  getCart,
+  setCart,
+  createOrder,
+  getSelectedAddress,
+  setSelectedAddress,
+} = require("../../utils/storage.js");
 
 Page({
   data: {
     items: [],
     totalCount: 0,
     totalPrice: 0,
-    address: {
-      name: "张三",
-      phone: "13800000000",
-      detail: "北京市朝阳区xxx路xx号",
-    },
+    address: null,
     remark: "",
     submitting: false,
   },
@@ -38,6 +40,23 @@ Page({
       totalCount,
       totalPrice,
     });
+
+    this.loadAddress();
+  },
+
+  onShow() {
+    this.loadAddress();
+  },
+
+  loadAddress() {
+    const address = getSelectedAddress();
+    this.setData({ address });
+  },
+
+  goAddress() {
+    wx.navigateTo({
+      url: "/pages/address/address?mode=select",
+    });
   },
 
   onRemarkInput(e) {
@@ -53,32 +72,47 @@ Page({
       return;
     }
 
+    if (!address) {
+      wx.showToast({ title: "请选择收货地址", icon: "none" });
+      return;
+    }
+
     this.setData({ submitting: true });
 
-    // 1) 创建订单
-    const order = createOrder({
-      items,
-      address,
-      remark,
-    });
-
-    // 2) 从购物车移除已结算商品
-    const cart = getCart();
-    const checkedIds = new Set(items.map((i) => i.id));
-    const nextCart = cart.filter((i) => !checkedIds.has(i.id));
-    setCart(nextCart);
-
-    // 3) 清理临时结算数据
-    wx.removeStorageSync("CHECKOUT_ITEMS");
-
-    wx.showToast({ title: "下单成功", icon: "success" });
-
-    setTimeout(() => {
-      wx.redirectTo({
-        url: "/pages/order-list/order-list",
+    try {
+      // 1) 创建订单（包含库存检查）
+      const order = createOrder({
+        items,
+        address,
+        remark,
       });
-    }, 500);
 
-    console.log("created order:", order);
+      // 2) 从购物车移除已结算商品
+      const cart = getCart();
+      const checkedIds = new Set(items.map((i) => i.id));
+      const nextCart = cart.filter((i) => !checkedIds.has(i.id));
+      setCart(nextCart);
+
+      // 3) 清理临时结算数据
+      wx.removeStorageSync("CHECKOUT_ITEMS");
+
+      wx.showToast({ title: "下单成功", icon: "success" });
+
+      setTimeout(() => {
+        wx.redirectTo({
+          url: "/pages/order-list/order-list",
+        });
+      }, 500);
+
+      console.log("created order:", order);
+    } catch (error) {
+      wx.hideToast();
+      wx.showModal({
+        title: "下单失败",
+        content: error.message || "库存不足，请调整商品数量",
+        showCancel: false,
+      });
+      this.setData({ submitting: false });
+    }
   },
 });

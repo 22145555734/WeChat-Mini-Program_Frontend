@@ -29,9 +29,21 @@ Page({
   },
 
   onBuyTap() {
-    wx.showToast({
-      title: "购买功能可后续添加",
-      icon: "none",
+    const { book } = this.data;
+    if (!book) return;
+
+    // 立即购买：直接创建结算数据，不经过购物车
+    const checkoutItems = [
+      {
+        ...book,
+        count: 1,
+        checked: true,
+      },
+    ];
+
+    wx.setStorageSync("CHECKOUT_ITEMS", checkoutItems);
+    wx.navigateTo({
+      url: "/pages/checkout/checkout",
     });
   },
 

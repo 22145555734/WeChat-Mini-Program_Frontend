@@ -1,66 +1,75 @@
 // pages/profile/profile.js
-Page({
+const storage = require("../../utils/storage.js");
 
+Page({
   /**
    * 页面的初始数据
    */
   data: {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad(options) {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady() {
-
+    pendingCount: 0,
+    paidCount: 0,
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow() {
-
+    this.loadOrderStats();
   },
 
   /**
-   * 生命周期函数--监听页面隐藏
+   * 加载订单统计数据
    */
-  onHide() {
+  loadOrderStats() {
+    const orders = storage.getOrders();
+    const pendingCount = orders.filter((o) => o.status === "PENDING").length;
+    const paidCount = orders.filter((o) => o.status === "PAID").length;
 
+    this.setData({
+      pendingCount,
+      paidCount,
+    });
   },
 
   /**
-   * 生命周期函数--监听页面卸载
+   * 跳转到订单列表
    */
-  onUnload() {
-
+  goToOrders(e) {
+    const status = e.currentTarget.dataset.status;
+    const url = status
+      ? `/pages/order-list/order-list?status=${status}`
+      : "/pages/order-list/order-list";
+    wx.navigateTo({
+      url,
+    });
   },
 
   /**
-   * 页面相关事件处理函数--监听用户下拉动作
+   * 跳转到地址管理
    */
-  onPullDownRefresh() {
-
+  goToAddress() {
+    wx.navigateTo({
+      url: "/pages/address/address",
+    });
   },
 
   /**
-   * 页面上拉触底事件的处理函数
+   * 清空缓存
    */
-  onReachBottom() {
-
+  clearStorage() {
+    wx.showModal({
+      title: "提示",
+      content: "确定要清空所有缓存数据吗？这将清除购物车、订单和地址信息。",
+      success: (res) => {
+        if (res.confirm) {
+          wx.clearStorageSync();
+          this.loadOrderStats();
+          wx.showToast({
+            title: "缓存已清空",
+            icon: "success",
+          });
+        }
+      },
+    });
   },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
-  }
-})
+});
