@@ -1,27 +1,10 @@
 // miniprogram/pages/order-list/order-list.js
 const { getOrders, cancelOrder, payOrder } = require("../../utils/storage");
-
-function formatTime(ts) {
-  const d = new Date(ts);
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  const h = String(d.getHours()).padStart(2, "0");
-  const min = String(d.getMinutes()).padStart(2, "0");
-  return `${y}-${m}-${day} ${h}:${min}`;
-}
-
-function statusText(status) {
-  switch (status) {
-    case "PAID":
-      return "已支付";
-    case "CANCELED":
-      return "已取消";
-    case "PENDING":
-    default:
-      return "待支付";
-  }
-}
+const {
+  formatTime,
+  statusText,
+  formatPrice,
+} = require("../../utils/format.js");
 
 Page({
   data: {
@@ -92,5 +75,13 @@ Page({
     wx.navigateTo({
       url: `/pages/order-detail/order-detail?id=${orderId}`,
     });
+  },
+
+  // 下拉刷新
+  onPullDownRefresh() {
+    this.onShow();
+    setTimeout(() => {
+      wx.stopPullDownRefresh();
+    }, 500);
   },
 });

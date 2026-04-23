@@ -5,6 +5,8 @@
       <text wx:if="{{order.status === 'PAID'}}">✓</text>
       <text wx:if="{{order.status === 'PENDING'}}">⏱</text>
       <text wx:if="{{order.status === 'CANCELED'}}">✕</text>
+      <text wx:if="{{order.status === 'SHIPPED'}}">🚚</text>
+      <text wx:if="{{order.status === 'COMPLETED'}}">🎉</text>
     </view>
     <view class="status-info">
       <view class="status-title">{{order.statusText}}</view>
@@ -12,6 +14,8 @@
         <text wx:if="{{order.status === 'PENDING'}}">请在30分钟内完成支付</text>
         <text wx:if="{{order.status === 'PAID'}}">感谢您的购买，商品即将发货</text>
         <text wx:if="{{order.status === 'CANCELED'}}">该订单已取消</text>
+        <text wx:if="{{order.status === 'SHIPPED'}}">商品已发出，请注意查收</text>
+        <text wx:if="{{order.status === 'COMPLETED'}}">感谢您的购买，期待再次光临</text>
       </view>
     </view>
   </view>
@@ -86,6 +90,14 @@
     <button class="action-btn pay" bindtap="onPayOrder">立即支付</button>
   </view>
   <view class="bottom-actions" wx:if="{{order.status === 'PAID'}}">
+    <button class="action-btn again" open-type="switchTab" url="/pages/home/home">继续购物</button>
+    <button class="action-btn ship" bindtap="onShipOrder">模拟发货</button>
+  </view>
+  <view class="bottom-actions" wx:if="{{order.status === 'SHIPPED'}}">
+    <button class="action-btn again" open-type="switchTab" url="/pages/home/home">继续购物</button>
+    <button class="action-btn confirm" bindtap="onCompleteOrder">确认收货</button>
+  </view>
+  <view class="bottom-actions" wx:if="{{order.status === 'COMPLETED'}}">
     <button class="action-btn again" open-type="switchTab" url="/pages/home/home">继续购物</button>
   </view>
 </view>

@@ -8,6 +8,22 @@ Page({
   data: {
     pendingCount: 0,
     paidCount: 0,
+    isLoggedIn: false,
+    userInfo: null,
+  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad() {
+    // 检查登录状态
+    const userInfo = wx.getStorageSync("USER_INFO");
+    if (userInfo) {
+      this.setData({
+        isLoggedIn: true,
+        userInfo,
+      });
+    }
   },
 
   /**
@@ -15,6 +31,48 @@ Page({
    */
   onShow() {
     this.loadOrderStats();
+  },
+
+  /**
+   * 模拟登录
+   */
+  onLogin() {
+    wx.showLoading({ title: "登录中..." });
+    setTimeout(() => {
+      const userInfo = {
+        nickName: "图书爱好者",
+        avatarUrl: "",
+        phone: "138****8888",
+        level: "VIP会员",
+      };
+      wx.setStorageSync("USER_INFO", userInfo);
+      this.setData({
+        isLoggedIn: true,
+        userInfo,
+      });
+      wx.hideLoading();
+      wx.showToast({ title: "登录成功", icon: "success" });
+    }, 1000);
+  },
+
+  /**
+   * 退出登录
+   */
+  onLogout() {
+    wx.showModal({
+      title: "提示",
+      content: "确定要退出登录吗？",
+      success: (res) => {
+        if (res.confirm) {
+          wx.removeStorageSync("USER_INFO");
+          this.setData({
+            isLoggedIn: false,
+            userInfo: null,
+          });
+          wx.showToast({ title: "已退出登录", icon: "success" });
+        }
+      },
+    });
   },
 
   /**

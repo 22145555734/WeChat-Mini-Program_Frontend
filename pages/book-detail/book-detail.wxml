@@ -15,6 +15,16 @@
       <view class="price">¥{{book.price}}</view>
       <view class="meta">销量：{{book.sales}} ｜ 库存：{{book.stock}}</view>
 
+      <!-- 数量选择 -->
+      <view class="quantity-row">
+        <text class="label">购买数量</text>
+        <view class="quantity-box">
+          <button class="qty-btn" bindtap="onMinus" disabled="{{count <= 1}}">-</button>
+          <input class="qty-input" type="number" value="{{count}}" bindinput="onCountInput" />
+          <button class="qty-btn" bindtap="onPlus" disabled="{{count >= book.stock}}">+</button>
+        </view>
+      </view>
+
       <view class="desc-title">图书简介</view>
       <view class="desc">{{book.desc}}</view>
 

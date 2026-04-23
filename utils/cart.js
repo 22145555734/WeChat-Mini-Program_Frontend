@@ -1,11 +1,12 @@
-const CART_KEY = "BOOK_CART";
+// 购物车工具 - 统一使用 storage.js 管理
+const storage = require("./storage.js");
 
 function getCart() {
-  return wx.getStorageSync(CART_KEY) || [];
+  return storage.getCart();
 }
 
 function setCart(cart) {
-  wx.setStorageSync(CART_KEY, cart);
+  storage.setCart(cart);
 }
 
 function addToCart(book, count = 1) {

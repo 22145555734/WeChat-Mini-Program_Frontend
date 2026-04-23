@@ -140,6 +140,16 @@ function updateOrderStatus(orderId, status) {
   }
 }
 
+// 发货
+function shipOrder(orderId) {
+  updateOrderStatus(orderId, "SHIPPED");
+}
+
+// 确认收货/完成
+function completeOrder(orderId) {
+  updateOrderStatus(orderId, "COMPLETED");
+}
+
 function cancelOrder(orderId) {
   const orders = getOrders();
   const order = orders.find((o) => o.id === orderId);
@@ -240,6 +250,8 @@ module.exports = {
   updateOrderStatus,
   cancelOrder,
   payOrder,
+  shipOrder,
+  completeOrder,
   // 地址
   getAddresses,
   setAddresses,

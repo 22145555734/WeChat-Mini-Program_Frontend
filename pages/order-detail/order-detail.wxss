@@ -24,6 +24,14 @@
   background: linear-gradient(135deg, #9e9e9e 0%, #bdbdbd 100%);
 }
 
+.status-SHIPPED {
+  background: linear-gradient(135deg, #2196f3 0%, #64b5f6 100%);
+}
+
+.status-COMPLETED {
+  background: linear-gradient(135deg, #9c27b0 0%, #ba68c8 100%);
+}
+
 .status-icon {
   width: 80rpx;
   height: 80rpx;
@@ -231,5 +239,15 @@
 
 .action-btn.again {
   background: #2b7cff;
+  color: #fff;
+}
+
+.action-btn.ship {
+  background: #2196f3;
+  color: #fff;
+}
+
+.action-btn.confirm {
+  background: #9c27b0;
   color: #fff;
 }
